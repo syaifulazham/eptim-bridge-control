@@ -23,7 +23,11 @@
       "Bash(sudo tccutil *)",
       "Bash(defaults read *)",
       "Bash(pkill -9 -f Electron)",
-      "Bash(pkill -9 -f electron)"
+      "Bash(pkill -9 -f electron)",
+      "Bash(xargs ls *)",
+      "Bash(convert --version)",
+      "Bash(node -e \"require\\('canvas'\\)\")",
+      "Bash(node scripts/gen-icons.js)"
     ],
     "additionalDirectories": [
       "/private/tmp"
