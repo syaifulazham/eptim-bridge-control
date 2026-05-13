@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/azham/a-job/repo/**)",
+      "Bash(timeout 5 node -e ' *)",
+      "Bash(node -e ' *)",
+      "Bash(npx electron *)",
+      "Bash(node -e \"const e = require\\('electron'\\); console.log\\('electron type:', typeof e\\); console.log\\('keys:', Object.keys\\(e\\).slice\\(0,10\\)\\);\")",
+      "Bash(/Users/azham/a-job/repo/eptim-bridge-control/node_modules/.bin/electron --version)",
+      "Bash(./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron dist/test-min.js)",
+      "Bash(env)",
+      "Bash(pkill -f \"Electron.*dist/main\")",
+      "Bash(ELECTRON_RUN_AS_NODE= ./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron dist/main.js)",
+      "Read(//tmp/**)",
+      "Bash(awk '{print $2, $11, $12, $13}')",
+      "Bash(kill 33780)",
+      "Bash(chmod +x scripts/patch-electron-plist.sh)",
+      "Bash(bash scripts/patch-electron-plist.sh)",
+      "Bash(/usr/libexec/PlistBuddy -c 'Print :NSLocalNetworkUsageDescription' node_modules/electron/dist/Electron.app/Contents/Info.plist)",
+      "Bash(codesign -dv node_modules/electron/dist/Electron.app)",
+      "Bash(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' node_modules/electron/dist/Electron.app/Contents/Info.plist)",
+      "Bash(tccutil reset *)",
+      "Bash(sudo tccutil *)",
+      "Bash(defaults read *)",
+      "Bash(pkill -9 -f Electron)",
+      "Bash(pkill -9 -f electron)"
+    ],
+    "additionalDirectories": [
+      "/private/tmp"
+    ]
+  }
+}

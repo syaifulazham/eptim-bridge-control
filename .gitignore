@@ -1,0 +1,6 @@
+node_modules/
+dist/
+out/
+release/
+*.js.map
+.DS_Store
