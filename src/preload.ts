@@ -20,4 +20,22 @@ contextBridge.exposeInMainWorld('bridge', {
   selfTest(): Promise<string> {
     return ipcRenderer.invoke('bridge:selftest');
   },
+
+  // ── Auto-update ──────────────────────────────────────────────────────────
+
+  onUpdateStatus(cb: (status: unknown) => void): void {
+    ipcRenderer.on('update:status', (_e, status) => cb(status));
+  },
+
+  downloadUpdate(): void {
+    ipcRenderer.send('update:download');
+  },
+
+  installUpdate(): void {
+    ipcRenderer.send('update:install');
+  },
+
+  checkForUpdates(): void {
+    ipcRenderer.send('update:check');
+  },
 });

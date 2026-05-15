@@ -27,7 +27,8 @@
       "Bash(xargs ls *)",
       "Bash(convert --version)",
       "Bash(node -e \"require\\('canvas'\\)\")",
-      "Bash(node scripts/gen-icons.js)"
+      "Bash(node scripts/gen-icons.js)",
+      "Bash(python3 -m json.tool)"
     ],
     "additionalDirectories": [
       "/private/tmp"

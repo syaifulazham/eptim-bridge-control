@@ -2,17 +2,24 @@
   "name": "eptim-bridge-control",
   "version": "1.0.0",
   "description": "Eptim Bridge Control — tray app bridging the webapp to a LiteBee Wing drone over UDP",
+  "author": "Eptim <support@eptim.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syaifulazham/eptim-bridge-control"
+  },
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
     "start": "npm run build && node scripts/launch.js",
     "watch": "tsc --watch",
     "package": "npm run build && electron-builder",
+    "release": "npm run build && electron-builder --publish always",
     "make-icon": "node scripts/make-icon.js",
     "gen-icons": "node scripts/gen-icons.js",
     "postinstall": "bash scripts/patch-electron-plist.sh || true"
   },
   "dependencies": {
+    "electron-updater": "^6.8.3",
     "ws": "^8.18.0"
   },
   "devDependencies": {
@@ -26,10 +33,23 @@
     "appId": "com.eptim.bridge-control",
     "productName": "Eptim Bridge Control",
     "asar": true,
+    "publish": {
+      "provider": "github",
+      "owner": "syaifulazham",
+      "repo": "eptim-bridge-control"
+    },
     "mac": {
       "category": "public.app-category.utilities",
       "icon": "assets/icon.icns",
-      "target": [{ "target": "dmg", "arch": ["arm64", "x64"] }],
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "extendInfo": {
@@ -40,9 +60,24 @@
       "icon": "assets/icon.ico",
       "target": [{ "target": "nsis", "arch": ["x64"] }]
     },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Eptim Bridge Control"
+    },
     "linux": {
       "icon": "assets/icon.png",
-      "target": [{ "target": "AppImage", "arch": ["x64"] }]
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     },
     "files": [
       "dist/**/*",

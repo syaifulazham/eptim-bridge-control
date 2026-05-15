@@ -392,6 +392,58 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Update banner ───────────────────────────────────────────── */
+    .update-bar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 14px;
+      background: rgba(124,106,247,.18);
+      border-bottom: 1px solid rgba(124,106,247,.35);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .update-bar.visible { display: flex; }
+    .update-bar-text { flex: 1; color: #c8c0ff; }
+    .update-bar-text strong { color: #fff; font-weight: 600; }
+    .update-bar-progress {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .update-bar-progress-fill {
+      height: 100%;
+      background: var(--purple);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+    .update-bar-btn {
+      flex: none;
+      padding: 4px 12px;
+      border-radius: 5px;
+      border: 1px solid var(--purple);
+      background: var(--purple);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .update-bar-btn:hover { opacity: 0.85; }
+    .update-bar-dismiss {
+      flex: none;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+    }
+    .update-bar-dismiss:hover { color: var(--text); background: none; }
   </style>
 </head>
 <body>
@@ -402,6 +454,16 @@
   <span class="titlebar-port" id="title-port"></span>
   <div class="titlebar-spacer"></div>
   <button class="btn-help" id="btn-help" onclick="toggleGuide()" title="How to use this app">?</button>
+</div>
+
+<!-- ── Update bar ─────────────────────────────────────────────────── -->
+<div class="update-bar" id="update-bar">
+  <span class="update-bar-text" id="update-text"></span>
+  <div class="update-bar-progress" id="update-progress" style="display:none">
+    <div class="update-bar-progress-fill" id="update-fill" style="width:0%"></div>
+  </div>
+  <button class="update-bar-btn" id="update-action-btn" style="display:none"></button>
+  <button class="update-bar-dismiss" id="update-dismiss-btn" title="Dismiss" style="display:none">×</button>
 </div>
 
 <!-- ── Main content ─────────────────────────────────────────────── -->
@@ -905,6 +967,75 @@ function esc(s) {
   return String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+// ── Auto-update banner ────────────────────────────────────────────────────────
+
+let _updateState = null;
+
+window.bridge.onUpdateStatus((status) => {
+  _updateState = status.state;
+  const bar        = $('update-bar');
+  const text       = $('update-text');
+  const progress   = $('update-progress');
+  const fill       = $('update-fill');
+  const actionBtn  = $('update-action-btn');
+  const dismissBtn = $('update-dismiss-btn');
+
+  // Reset visibility
+  progress.style.display  = 'none';
+  actionBtn.style.display = 'none';
+  dismissBtn.style.display = 'none';
+
+  switch (status.state) {
+    case 'available':
+      text.innerHTML = `<strong>Update v${status.version}</strong> is available`;
+      actionBtn.textContent  = 'Download';
+      actionBtn.style.display = '';
+      dismissBtn.style.display = '';
+      bar.classList.add('visible');
+      log('info', `Update available: v${status.version}`);
+      break;
+
+    case 'downloading':
+      text.innerHTML = `Downloading update… <strong>${status.percent ?? 0}%</strong>`;
+      fill.style.width = `${status.percent ?? 0}%`;
+      progress.style.display = '';
+      bar.classList.add('visible');
+      break;
+
+    case 'ready':
+      text.innerHTML = `<strong>v${status.version}</strong> downloaded — restart to install`;
+      actionBtn.textContent  = 'Restart & Install';
+      actionBtn.style.display = '';
+      dismissBtn.style.display = '';
+      bar.classList.add('visible');
+      log('info', `Update ready: v${status.version}`);
+      break;
+
+    case 'error':
+      bar.classList.remove('visible');
+      if (status.error) log('warn', `Updater: ${status.error}`);
+      break;
+
+    default: // idle, checking, not-available
+      bar.classList.remove('visible');
+      break;
+  }
+});
+
+$('update-action-btn').addEventListener('click', () => {
+  if (_updateState === 'available') {
+    window.bridge.downloadUpdate();
+    $('update-action-btn').style.display = 'none';
+    $('update-dismiss-btn').style.display = 'none';
+  } else if (_updateState === 'ready') {
+    window.bridge.installUpdate();
+  }
+});
+
+$('update-dismiss-btn').addEventListener('click', () => {
+  $('update-bar').classList.remove('visible');
+});
 </script>
 </body>
 </html>
