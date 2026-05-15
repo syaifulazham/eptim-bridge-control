@@ -28,7 +28,10 @@
       "Bash(convert --version)",
       "Bash(node -e \"require\\('canvas'\\)\")",
       "Bash(node scripts/gen-icons.js)",
-      "Bash(python3 -m json.tool)"
+      "Bash(python3 -m json.tool)",
+      "Bash(node -p \"require\\('./package.json'\\).version\")",
+      "Bash(git tag *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
       "/private/tmp"
