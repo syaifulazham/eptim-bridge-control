@@ -31,7 +31,11 @@
       "Bash(python3 -m json.tool)",
       "Bash(node -p \"require\\('./package.json'\\).version\")",
       "Bash(git tag *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(pkill -f Electron)",
+      "Bash(pkill -f \"electron\")",
+      "Bash(chmod +x /Users/azham/a-job/repo/eptim-bridge-control/scripts/release.sh)",
+      "Bash(git commit -m ' *)"
     ],
     "additionalDirectories": [
       "/private/tmp"
